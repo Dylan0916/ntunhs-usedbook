@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Image;
+use App\User;
 use App\book_data;
+use App\message_board;
 use Validator;
 
 class SellController extends Controller
@@ -124,7 +126,7 @@ class SellController extends Controller
       $books = Book_data::find($id);
       $data = $this->get_request($request, $books);
 
-      // 找到舊檔名
+      // 判斷是否有上傳新封面圖
       if (is_null($data['book_img'])) {
         $data['book_img'] = $books->book_img;
       } else {
@@ -182,5 +184,61 @@ class SellController extends Controller
       if (file_exists($file_path)) unlink($file_path);
     }
 
+    // 顯示書籍留言
+    public function show_messageBoard(Request $request)
+    {
+      $replyClass = (\Auth::check()) ? 'reply' : '' ;
+      $replyLink = (\Auth::check()) ? '' : 'href="' . url('login') . '"';
+      $replyText = (\Auth::check()) ? '回覆' : '登入後回覆';
 
+      $dataNum = Message_board::where('book_data_id', $request["book_data_id"])->select('area')->distinct()->get();
+      $area = count($dataNum);
+
+      // 印出不同區塊的留言
+      for ($i = 1; $i <= $area; $i++) {
+        ?>
+          <div class="col-md-12" style="margin-top: 20px; border: solid 1px #888;">
+            <div class="content">
+        <?php
+              $data = Message_board::where('book_data_id', $request["book_data_id"])->where('area', $i)->get();
+              // 印出每一區塊的留言
+              foreach ($data as $key => $value) {
+                if ($key >= 1) echo '<hr style="border-color: #888;" />';
+                $userData = User::find($value->user_id);
+                $create_date = explode(' ', $value->created_at);
+              ?>
+                <h4><?= $userData->name ?></h4>
+                <p><?= $value->content; ?></p>
+                <p style="font-size: 14px; color: #777;">in <?= $create_date[0]; ?></p>
+              <?php
+              }
+        ?>
+                <a class="<?= $replyClass ?>" style="cursor: pointer;" <?= $replyLink ?>>
+                  <i class="fa fa-hand-o-right"></i>
+                  <?= $replyText ?>
+                </a>
+                <div class="reply-form">
+                  <textarea name="content" data-area="<?= $i; ?>" rows="4" class="form-control"></textarea>
+                  <input type="button" value="送出" class="btn btn-primary message">
+                  <input type="button" value="取消" class="btn btn-primary cancel">
+                </div>
+             </div>
+          </div>
+        <?php
+      }
+      exit();
+    }
+
+    // 新增書籍留言
+    public function create_messageBoard(Request $request)
+    {
+      $dataNum = Message_board::where('book_data_id', $request["book_data_id"])->select('area')->distinct()->get();
+      $area = (isset($request['area'])) ? $request["area"] : count($dataNum) + 1;
+
+      $this->validate($request, ['content' => 'required'], ['content.required' => '留言內容 不能留空。']);
+
+      $i = Message_board::create( array_merge(['area' => $area], $request->all()) );
+
+      return ($i) ? '留言完成 !' : '留言失敗';
+    }
 }

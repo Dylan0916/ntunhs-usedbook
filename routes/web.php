@@ -21,6 +21,10 @@ Route::group(['middleware' => 'auth'], function() {
   Route::get('profile/{id}', 'ProfileController@show');
   Route::post('profile/{id}', 'ProfileController@store');
   Route::get('myBooks/{id}', 'ProfileController@showMyBooks');
+
+  // message board
+  Route::post('show_messageBoard', 'SellController@show_messageBoard');
+  Route::post('create_messageBoard', 'SellController@create_messageBoard');
 });
 
 

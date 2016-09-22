@@ -4,9 +4,10 @@
 
 <link rel="icon" href="{{ asset('assets/img/favicon.ico') }}">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>北護二手書拍賣網</title>
+<title>北護二手書交易平台</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Fonts -->
 <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
@@ -336,6 +337,7 @@ $(function() {
   $(window).resize(resizeHandler);
   resizeHandler();
 
+  // sidebar 亮頁選擇
   @if(isset($active))
     $('#<?= $active; ?>').addClass('active');
   @endif

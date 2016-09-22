@@ -20,22 +20,48 @@
 
 <style media="screen">
   .books .table .price2 {
-    font-size: 26px; color: #f00;
-  }
+    font-size: 26px; color: #f00; }
   .books .table .discount {
     padding-left: 8px;
     color: #e70; font-size: 24px;
   }
   .table-hover>tbody>tr:hover {
-    background-color: #eaeaea;
-  }
+    background-color: #eaeaea; }
+
   .books-information {
     padding-left: 13%;
     padding-top: 15px;
   }
   .books-information .leader {
-    padding-right: 13%;
+    padding-right: 13%; }
+
+  .message .plzLogin {
+    font-size: 16px; }
+  .message .login {
+    color: #59f; }
+  .message .login:hover {
+    color: #008; }
+  .message .content {
+    padding-bottom: 13px; }
+  .message .content p {
+    padding-top: 8px;
+    font-size: 16px;
   }
+  .message .content a {
+    font-size: 16px;
+    color: #888;
+  }
+  .message .content a:hover {
+    color: #59f; }
+  .message .reply-form {
+    padding-top: 20px;
+    display: none;
+  }
+  .message .reply-form.expanded {
+    display: block;
+  }
+  .message .reply-form input {
+    margin-top: 13px; }
 
   @media (max-width: 570px) {
     .books .table td,
@@ -45,21 +71,30 @@
       padding-left: 0;
     }
     .books .table .btn-info {
-      width: 68px;
-    }
+      width: 68px; }
   }
   @media (max-width: 767px) {
     .books-information {
-      padding-left: 5%;
-    }
+      padding-left: 5%; }
     .books-information .leader {
-      padding-right: 17%;
-    }
+      padding-right: 17%;   }
   }
   @media (max-width: 991px) {
     .books-information {
-      padding-left: 3%;
+      padding-left: 3%; }
+
+    .message div[class^="col-md-"] {
+      padding-left: 0;
+      padding-right: 0;
     }
+    .message .content {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  @media (min-width: 992px) {
+    .message .messageBtn-padding {
+      padding-bottom: 50px; }
   }
 </style>
 
@@ -153,8 +188,32 @@
         @endif
       </table>
     </div>
+
+    <div class="col-md-12 message">
+      <h3 style="border-bottom: 1px solid #aaa; padding-bottom: 15px;">留言給賣家</h3>
+
+      <div class="row ajaxMessage"></div>
+
+      @if(Auth::check())
+        <div class="col-md-9">
+          <textarea name="new-message-content" rows="4" class="form-control"></textarea>
+        </div>
+        <div class="col-md-3">
+          <div class="messageBtn-padding"></div>
+          <input type="button" value="送出" class="form-control btn btn-primary new-messageBtn">
+        </div>
+      @else
+        <div class="plzLogin">登入後進行留言！ <a href="{{ url('login') }}" class="login">登入</a></div>
+      @endif
+
+      <div class="message-board">
+
+      </div>
+
+    </div>
   </div>
 
+  <hr />
 </div>
 
 <!-- Modal (浮窗) -->
@@ -184,9 +243,106 @@
 </div>
 
 <script type="text/javascript">
+  $(function () {
+    // 傳送 token
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    get_data();
+  });
+
   $('.delete-btn').click(function () {
     $('#myModal').modal('show');
   });
+
+  $(document).on('click', '.reply', function() {
+    $(this).css('display', 'none');
+    $(this).next('.reply-form').addClass('expanded');
+  });
+  $(document).on('click', '.cancel', function() {
+    var replyForm = $(this).parent('.reply-form');
+    replyForm.removeClass('expanded');
+    replyForm.prev('.reply').css('display', 'block');
+  });
+
+  // message board ajax
+  $('.new-messageBtn').click(function () {
+    var content = $('[name="new-message-content"]');
+    messageBoard_ajax(content, null);
+  });
+  $(document).on('click', '.reply-form .message', function () {
+    var content = $(this).prev('[name="content"]'),
+        replyForm = $(this).parent('.reply-form');
+    messageBoard_ajax(content, replyForm);
+  });
+
+  // 取得留言資料
+  function get_data() {
+    var book_data_id = '{{ $book_data->id }}';
+
+    $.ajax({
+      url: '{{ action("SellController@show_messageBoard") }}',
+      method: 'post',
+      data: {
+        'book_data_id': book_data_id
+      },
+      success: function(response) {
+        $('.message-board').html(response);
+      },
+    });
+  }
+
+  function messageBoard_ajax(content, replyForm) {
+    var book_data_id = '{{ $book_data->id }}',
+        user_id = '<?= (Auth::check()) ? Auth::user()->id : ''; ?>',
+        area = content.data('area'),
+        ajaxMessage = $('.ajaxMessage');
+
+    // 新增留言
+    $.ajax({
+      url: '{{ action('SellController@create_messageBoard') }}',
+      method: 'post',
+      data: {
+        'book_data_id': book_data_id,
+        'user_id': user_id,
+        'content': content.val(),
+        'area': area
+      },
+      success: function(response) {
+        // remove error message
+        ajaxMessage.removeClass('alert alert-danger');
+
+        // add success message
+        ajaxMessage.addClass('alert alert-success').html('<p class="text-success" style="font-size: 16px;"><i class="glyphicon glyphicon-exclamation-sign"></i> ' + response + '</p>');
+
+        // remove message
+        content.val('');
+
+        // 將留言框隱藏
+        if (replyForm) {
+          replyForm.removeClass('expanded');
+          replyForm.prev('.reply').css('display', 'block');
+        }
+
+        get_data();
+      },
+      error: function(xhr) {
+        var errors  = xhr.responseJSON;
+        var error   = errors.content[0];
+
+        if (error) {
+          // remove success message
+          ajaxMessage.removeClass('alert alert-success');
+
+          // add error message
+          ajaxMessage.addClass('alert alert-danger').html('<p class="text-danger" style="font-size: 16px;"><i class="glyphicon glyphicon-exclamation-sign"></i> ' + error + '</p>');
+        }
+      }
+    });
+  }
 </script>
 
 @endsection

@@ -31,4 +31,9 @@ class User extends Authenticatable
     {
       return $this->hasMany('App\book_data');
     }
+
+    public function message_board()
+    {
+      return $this->hasMany('App\message_board');
+    }
 }
