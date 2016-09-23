@@ -25,6 +25,18 @@
 <style media="screen">
   * {
     font-family: Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .row .btn-info:hover {
+    background-color: #0088A8;
+    border-color: #0088A8;
+  }
+  .row .btn-danger:hover {
+    background-color: #e11;
+    border-color: #e11;
+  }
+  .row .btn-warning:hover {
+    background-color: #eb1;
+    border-color: #eb1;
+  }
 
   .sidebar-form {
     border-radius: 3px;
@@ -264,6 +276,13 @@
                         <a href="{!! action('ProfileController@showMyBooks', ['id' => Auth::user()->id]) !!}">
                             <span class="icon fa fa-file-text"></span>
                             <span class="title">我的刊登</span>
+                        </a>
+                    </li>
+
+                    <li class="" id="myFavorites">
+                        <a href="{!! action('ProfileController@showMyFavorites', ['id' => Auth::user()->id]) !!}">
+                            <span class="icon fa fa-heart"></span>
+                            <span class="title">我的收藏</span>
                         </a>
                     </li>
                   @endif

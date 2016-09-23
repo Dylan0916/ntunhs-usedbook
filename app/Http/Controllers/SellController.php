@@ -184,6 +184,42 @@ class SellController extends Controller
       if (file_exists($file_path)) unlink($file_path);
     }
 
+    // show favorites btn
+    public function show_favoritesBtn(Request $request)
+    {
+      $user_favorites = User::find($request["user_id"]);
+      $favorites = $user_favorites->favorites;
+
+      $strstr = strstr($favorites, $request['book_data_id']);
+      if ($strstr) {
+        return 'Y';
+      }
+      return 'N';
+    }
+
+    // add or remove favorites
+    public function add_favorites(Request $request)
+    {
+      $user_favorites = User::find($request["user_id"]);
+      $favorites = $user_favorites->favorites;
+
+      $strstr = strstr($favorites, $request['book_data_id']);
+      if ($strstr) {
+        $explode = explode(', ', $favorites);
+        for ($i = 0; $i < count($explode); $i++) {
+          if ($explode[$i] == $request['book_data_id']) continue;
+          $request['favorites'] .= ( empty($request['favorites']) ) ? $explode[$i] : ', ' . $explode[$i];
+        }
+
+        $user_favorites->update($request->all());
+        return 'remove';
+      }
+
+      $request['favorites'] = ( empty($favorites) ) ? $request['book_data_id'] : $favorites . ', ' . $request['book_data_id'];
+      $user_favorites->update($request->all());
+      return 'add';
+    }
+
     // 顯示書籍留言
     public function show_messageBoard(Request $request)
     {
@@ -195,7 +231,7 @@ class SellController extends Controller
       $area = count($dataNum);
 
       // 印出不同區塊的留言
-      for ($i = 1; $i <= $area; $i++) {
+      for ($i = $area; $i >= 1; $i--) {
         ?>
           <div class="col-md-12" style="margin-top: 20px; border: solid 1px #888;">
             <div class="content">
@@ -203,13 +239,19 @@ class SellController extends Controller
               $data = Message_board::where('book_data_id', $request["book_data_id"])->where('area', $i)->get();
               // 印出每一區塊的留言
               foreach ($data as $key => $value) {
-                if ($key >= 1) echo '<hr style="border-color: #888;" />';
+                if ($key >= 1)  echo '<hr style="border-color: #888;" />';
+                $nextMessage = ($key >= 1) ? 'nextMessage' : '' ;
                 $userData = User::find($value->user_id);
                 $create_date = explode(' ', $value->created_at);
+
+                $bookdata = Book_data::find($request["book_data_id"]);
+                $isSeller = ($value->user_id == $bookdata->user_id) ? '<span class="isSeller">賣家</span> ' : '';
               ?>
-                <h4><?= $userData->name ?></h4>
-                <p><?= $value->content; ?></p>
-                <p style="font-size: 14px; color: #777;">in <?= $create_date[0]; ?></p>
+                <div class="<?= $nextMessage; ?>">
+                  <h4><?= $isSeller . $userData->name ?></h4>
+                  <p><?= $value->content; ?></p>
+                  <p style="font-size: 14px; color: #777;">in <?= $create_date[0]; ?></p>
+                </div>
               <?php
               }
         ?>

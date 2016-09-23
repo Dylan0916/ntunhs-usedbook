@@ -13,6 +13,8 @@
 
 Route::get('/', 'SellController@index');
 Route::get('show/{id}', 'SellController@show');
+// show message board
+Route::post('show_messageBoard', 'SellController@show_messageBoard');
 
 Route::group(['middleware' => 'auth'], function() {
   Route::resource('sell', 'SellController', ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
@@ -22,8 +24,12 @@ Route::group(['middleware' => 'auth'], function() {
   Route::post('profile/{id}', 'ProfileController@store');
   Route::get('myBooks/{id}', 'ProfileController@showMyBooks');
 
-  // message board
-  Route::post('show_messageBoard', 'SellController@show_messageBoard');
+  // favorites
+  Route::get('myFavorites/{id}', 'ProfileController@showMyFavorites');
+  Route::post('show_favoritesBtn', 'SellController@show_favoritesBtn');
+  Route::post('add_favorites', 'SellController@add_favorites');
+
+  // create message board
   Route::post('create_messageBoard', 'SellController@create_messageBoard');
 });
 

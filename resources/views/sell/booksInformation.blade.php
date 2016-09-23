@@ -34,6 +34,15 @@
   }
   .books-information .leader {
     padding-right: 13%; }
+  .books-information .favorites {
+    display: none;
+    background: rgba(255, 119, 68, .75);
+    border-color: rgba(255, 119, 68, .75);
+  }
+  .books-information .favorites:hover {
+    background: rgba(255, 119, 68, 1);
+    border-color: rgba(255, 119, 68, 1);
+  }
 
   .message .plzLogin {
     font-size: 16px; }
@@ -62,6 +71,13 @@
   }
   .message .reply-form input {
     margin-top: 13px; }
+  .message .message-board .nextMessage {
+    padding-left: 25px; }
+  .message .message-board .isSeller {
+    background: rgba(0, 0, 0, .65);
+    color: #fff; border-radius: 100px;
+    font-size: .855em; padding: 2px 10px;
+  }
 
   @media (max-width: 570px) {
     .books .table td,
@@ -78,6 +94,8 @@
       padding-left: 5%; }
     .books-information .leader {
       padding-right: 17%;   }
+    .message .message-board .nextMessage {
+      padding-left: 0; }
   }
   @media (max-width: 991px) {
     .books-information {
@@ -177,15 +195,19 @@
           </tr>
         @endif
 
-        @if(Auth::check() && (Auth::user()->id == $book_data->user_id))
+        @if(Auth::check())
           <tr>
-            <td style="vertical-align: middle;">Action</td>
-            <td>
-              <a href="{{ route('sell.edit', ['id' => $book_data->id]) }}" class="btn btn-info"><i class="fa fa-edit"></i> 編輯</a>
-              <button href="button" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i> 刪除</button>
-            </td>
-          </tr>
-        @endif
+              <td style="vertical-align: middle;">Action</td>
+              <td>
+                @if (Auth::user()->id != $book_data->user_id)
+                  <button type="button" class="btn btn-primary favorites"></button>
+                @else
+                  <a href="{{ route('sell.edit', ['id' => $book_data->id]) }}" class="btn btn-info"><i class="fa fa-edit"></i> 編輯</a>
+                  <button href="button" class="btn btn-danger delete-btn"><i class="fa fa-trash-o"></i> 刪除</button>
+                @endif
+              </td>
+            </tr>
+          @endif
       </table>
     </div>
 
@@ -243,6 +265,9 @@
 </div>
 
 <script type="text/javascript">
+  var book_data_id = '{{ $book_data->id }}',
+      user_id = '<?= (Auth::check()) ? Auth::user()->id : ''; ?>';
+
   $(function () {
     // 傳送 token
     $.ajaxSetup({
@@ -251,13 +276,52 @@
       }
     });
 
-    get_data();
+    get_favoritesBtn();
+    get_messageBoard_data();
   });
 
   $('.delete-btn').click(function () {
     $('#myModal').modal('show');
   });
 
+  // add or remove favorites
+  $('.btn.favorites').click(function () {
+    $.ajax({
+      url: '{{ action('SellController@add_favorites') }}',
+      method: 'post',
+      data: {
+        'book_data_id': book_data_id,
+        'user_id': user_id
+      },
+      success: function(response) {
+        if (response == 'remove') $('.books-information .favorites').html('<i class="fa fa-heart-o"></i> 加入收藏');
+        else $('.books-information .favorites').html('<i class="fa fa-heart"></i> 移除收藏');
+
+        get_favoritesBtn();
+      },
+    });
+  });
+
+  // show favorites btn
+  function get_favoritesBtn() {
+    $.ajax({
+      url: '{{ action('SellController@show_favoritesBtn') }}',
+      method: 'post',
+      data: {
+        'book_data_id': book_data_id,
+        'user_id': user_id
+      },
+      success: function(response) {
+        var favoritesBtn = $('.books-information .favorites');
+        if (response == 'N') favoritesBtn.html('<i class="fa fa-heart-o"></i> 加入收藏');
+        else favoritesBtn.html('<i class="fa fa-heart"></i> 移除收藏');
+
+        favoritesBtn.css('display', 'inline');
+      },
+    });
+  }
+
+  // 回覆鍵 與 回覆表單切換
   $(document).on('click', '.reply', function() {
     $(this).css('display', 'none');
     $(this).next('.reply-form').addClass('expanded');
@@ -268,7 +332,7 @@
     replyForm.prev('.reply').css('display', 'block');
   });
 
-  // message board ajax
+  // message board btn ajax
   $('.new-messageBtn').click(function () {
     var content = $('[name="new-message-content"]');
     messageBoard_ajax(content, null);
@@ -280,9 +344,7 @@
   });
 
   // 取得留言資料
-  function get_data() {
-    var book_data_id = '{{ $book_data->id }}';
-
+  function get_messageBoard_data() {
     $.ajax({
       url: '{{ action("SellController@show_messageBoard") }}',
       method: 'post',
@@ -296,9 +358,7 @@
   }
 
   function messageBoard_ajax(content, replyForm) {
-    var book_data_id = '{{ $book_data->id }}',
-        user_id = '<?= (Auth::check()) ? Auth::user()->id : ''; ?>',
-        area = content.data('area'),
+    var area = content.data('area'),
         ajaxMessage = $('.ajaxMessage');
 
     // 新增留言
@@ -327,7 +387,7 @@
           replyForm.prev('.reply').css('display', 'block');
         }
 
-        get_data();
+        get_messageBoard_data();
       },
       error: function(xhr) {
         var errors  = xhr.responseJSON;

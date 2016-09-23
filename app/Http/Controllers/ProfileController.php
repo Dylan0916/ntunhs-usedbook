@@ -58,4 +58,22 @@ class ProfileController extends Controller
       return view('errors.404');
 
     }
+
+    public function showMyFavorites($id)
+    {
+      $title = '我的刊登';
+      $active = 'myFavorites';
+      $find_favorites = User::find($id);
+      $explode = explode(', ', $find_favorites->favorites);
+      $book_data = Book_data::where(function($query) use ($explode) {
+        foreach ($explode as $value) {
+          $query->orWhere('id', $value);
+        }
+      })->paginate(6);
+
+      if (\Auth::user()->id == $id) {
+        return view('myFavorites', compact('title', 'active', 'book_data'));
+      }
+      return view('errors.404');
+    }
 }
