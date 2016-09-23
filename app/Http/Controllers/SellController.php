@@ -204,9 +204,11 @@ class SellController extends Controller
       $favorites = $user_favorites->favorites;
 
       $strstr = strstr($favorites, $request['book_data_id']);
+      $request['favorites'] = '';
       if ($strstr) {
         $explode = explode(', ', $favorites);
-        for ($i = 0; $i < count($explode); $i++) {
+          for ($i = 0; $i < count($explode); $i++) {
+          if (count($explode) == 1) break;
           if ($explode[$i] == $request['book_data_id']) continue;
           $request['favorites'] .= ( empty($request['favorites']) ) ? $explode[$i] : ', ' . $explode[$i];
         }
