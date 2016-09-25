@@ -2,20 +2,18 @@
 @section('content')
 
 <style media="screen">
-  .container .row {
-    padding-left: 0; }
-  .books span {
+  .books-container .books span {
     font-size: 16px;
     color: #555;
   }
-  .books h3 {
+  .books-container .books h3 {
     color: #da0;
   }
 </style>
 
 
 @if(count($book_data))
-  <div class="container">
+  <div class="container books-container">
 
     @foreach($book_data as $key => $value)
       <?php $discount = round( (($value->book_price2 / $value->book_price) * 10), 2 ); ?>
@@ -25,7 +23,7 @@
           <div class="col-sm-12 col-lg-6 books">
             <div class="col-sm-4">
               <a href="{{ action('SellController@show', ['id' => $value->id]) }}">
-                {!! Html::image('upload/' . $value->book_img, $value->book_name, ['class' => 'img-responsive', 'width' => 160]) !!}
+                {!! Html::image('upload/' . $value->book_img, $value->book_name, ['class' => 'img-responsive', 'height' => 207]) !!}
               </a>
             </div>
             <div class="col-sm-8">

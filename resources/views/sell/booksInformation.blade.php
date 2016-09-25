@@ -19,9 +19,9 @@
 ?>
 
 <style media="screen">
-  .books .table .price2 {
+  .bookInformation-container .books .table .price2 {
     font-size: 26px; color: #f00; }
-  .books .table .discount {
+  .bookInformation-container .books .table .discount {
     padding-left: 8px;
     color: #e70; font-size: 24px;
   }
@@ -29,9 +29,11 @@
     background-color: #eaeaea; }
 
   .books-information {
-    padding-left: 13%;
+    padding-left: 3%;
     padding-top: 15px;
   }
+  .books-information .books {
+    padding-left: 5%; }
   .books-information .leader {
     padding-right: 13%; }
   .books-information .favorites {
@@ -44,81 +46,97 @@
     border-color: rgba(255, 119, 68, 1);
   }
 
-  .message .plzLogin {
+  .books-information .message .plzLogin {
     font-size: 16px; }
-  .message .login {
+  .books-information .message .login {
     color: #59f; }
-  .message .login:hover {
+  .books-information .message .login:hover {
     color: #008; }
-  .message .content {
+  .books-information .message .content {
     padding-bottom: 13px; }
-  .message .content p {
+  .books-information .message .content p {
     padding-top: 8px;
     font-size: 16px;
   }
-  .message .content a {
+  .books-information .message .content a {
     font-size: 16px;
     color: #888;
   }
-  .message .content a:hover {
+  .books-information .message .content a:hover {
     color: #59f; }
-  .message .reply-form {
+  .books-information .message .reply-form {
     padding-top: 20px;
     display: none;
   }
-  .message .reply-form.expanded {
+  .books-information .message .reply-form.expanded {
     display: block;
   }
-  .message .reply-form input {
+  .books-information .message .reply-form input {
     margin-top: 13px; }
-  .message .message-board .nextMessage {
+  .books-information .message .message-board h4 {
+    color: #003c9d;  }
+  .books-information .message .message-board .nextMessage {
     padding-left: 25px; }
-  .message .message-board .isSeller {
+  .books-information .message .message-board .isSeller {
     background: rgba(0, 0, 0, .65);
     color: #fff; border-radius: 100px;
     font-size: .855em; padding: 2px 10px;
   }
 
-  @media (max-width: 570px) {
-    .books .table td,
-    .books .table .price2,
-    .books .table .discount {
-      font-size: 17px;
-      padding-left: 0;
-    }
-    .books .table .btn-info {
-      width: 68px; }
+  .bookInformation-fixed {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 190px; padding: 10px;
+    background-color: #abcdef;
+    display: none; opacity: 0.85;
   }
+
   @media (max-width: 767px) {
-    .books-information {
-      padding-left: 5%; }
+    .books-information .books h3:first-child {
+      padding-left: 0; }
+    .books-information .books .table {
+      margin-left: 0; }
     .books-information .leader {
       padding-right: 17%;   }
-    .message .message-board .nextMessage {
+    .books-information .message .message-board .nextMessage {
       padding-left: 0; }
   }
-  @media (max-width: 991px) {
-    .books-information {
-      padding-left: 3%; }
-
-    .message div[class^="col-md-"] {
+  @media (max-width: 570px) {
+    .bookInformation-container .books .col-md-8 {
       padding-left: 0;
       padding-right: 0;
     }
-    .message .content {
+    .bookInformation-container .books .table td,
+    .bookInformation-container .books .table .price2,
+    .bookInformation-container .books .table .discount {
+      font-size: 17px;
+      padding-left: 0;
+    }
+    .bookInformation-container .books .table .btn-info {
+      width: 68px; }
+  }
+
+  @media (max-width: 991px) {
+    .books-information .message {
+      margin-top: 35px; }
+    .books-information .message div[class^="col-md-"] {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .books-information .message .content {
       padding-left: 10px;
       padding-right: 10px;
     }
   }
   @media (min-width: 992px) {
-    .message .messageBtn-padding {
+    .books-information .message .messageBtn-padding {
       padding-bottom: 50px; }
   }
 </style>
 
-<div class="container">
+<div class="container bookInformation-container">
 
-  <div class="row">
+  <div class="row" style="padding-left: 3%;">
     <div class="col-md-12 books">
       <div class="col-md-4">
         {!! Html::image('upload/' . $book_data->book_img, $book_data->book_name, ['class' => 'img-responsive', 'width' => 250]) !!}
@@ -238,6 +256,11 @@
   <hr />
 </div>
 
+<!-- 固定右下角 -->
+<div class="bookInformation-fixed">
+
+</div>
+
 <!-- Modal (浮窗) -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -294,8 +317,15 @@
         'user_id': user_id
       },
       success: function(response) {
-        if (response == 'remove') $('.books-information .favorites').html('<i class="fa fa-heart-o"></i> 加入收藏');
-        else $('.books-information .favorites').html('<i class="fa fa-heart"></i> 移除收藏');
+        $('.bookInformation-fixed').css('display', 'block');
+        if (response == 'remove') {
+          $('.books-information .favorites').html('<i class="fa fa-heart-o"></i> 加入收藏');
+          $('.bookInformation-fixed').html('已成功移除收藏 !');
+        } else {
+          $('.books-information .favorites').html('<i class="fa fa-heart"></i> 移除收藏');
+          $('.bookInformation-fixed').html('已成功加入收藏 !');
+        }
+        $('.bookInformation-fixed').delay(3000).fadeOut(1000);
 
         get_favoritesBtn();
       },

@@ -3,7 +3,9 @@
 
 <style media="screen">
   .container .row {
-    padding-left: 0; }
+    padding-left: 0;
+    margin: 0 -15px;
+  }
   .container .author {
     color: #088; font-size: 15px; }
   .text-danger {
@@ -24,7 +26,7 @@
 
 
 @if(count($book_data))
-  <div class="container books">
+  <div class="container">
 
       @foreach($book_data as $key => $value)
         @if($key % 2 == 0)
@@ -71,7 +73,7 @@
   </div>
 @else
   <h2 class="text-danger" style="font-family: 'Microsoft JhengHei';">
-    你還沒有收藏書籍唷~ 
+    你還沒有收藏書籍唷~
   </h2>
 @endif
 

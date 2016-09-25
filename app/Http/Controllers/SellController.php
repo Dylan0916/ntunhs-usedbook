@@ -235,7 +235,7 @@ class SellController extends Controller
       // 印出不同區塊的留言
       for ($i = $area; $i >= 1; $i--) {
         ?>
-          <div class="col-md-12" style="margin-top: 20px; border: solid 1px #888;">
+          <div class="col-md-12" style="margin-top: 20px; border: solid 1px #888; background-color: #fff;">
             <div class="content">
         <?php
               $data = Message_board::where('book_data_id', $request["book_data_id"])->where('area', $i)->get();

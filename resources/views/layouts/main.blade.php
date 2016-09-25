@@ -73,6 +73,16 @@
     border-bottom-left-radius: 0;
   }
 
+  /* index myBooks myFavorites */
+  .books-container .row {
+    padding-left: 0;
+    margin: 0 -15px;
+  }
+  .books-container .author {
+    color: #088; font-size: 15px; }
+  .text-danger {
+    padding-left: 50px; }
+
   /* Form */
   .my-container {
     padding-left: 18%;
@@ -110,7 +120,8 @@
 
   /* books */
   .books {
-    background-color: #f5f5f5; }
+    background-color: #fff;
+    border: 1px solid #ddd; }
   .books img {
     display: block;
     margin: auto;
@@ -127,6 +138,29 @@
     padding-bottom: 15px;
   }
 
+  @media (max-width: 340px) {
+    .books-container .author {
+      font-size: 13px; }
+    .books-container .pirce {
+      font-size: 17px; }
+  }
+  @media (max-width: 768px) {
+    /* myBooks myFavorites */
+    .text-danger {
+      padding-left: 0; }
+
+    /* Form */
+    .my-container {
+      padding-left: 5%;
+      padding-right: 5%
+    }
+
+    /* paginate */
+    .flat-blue .pager {
+      display: block; }
+    .flat-blue .pagination {
+      display: none; }
+  }
   @media (max-width: 750px) {
     .books h4.books-name {
       padding-top: 13px; }
@@ -143,18 +177,9 @@
       font-size: 15px; }
   }
 
-  @media (max-width: 767px) {
-    /* Form */
-    .my-container {
-      padding-left: 5%;
-      padding-right: 5%
-    }
-
-    /* paginate */
-    .flat-blue .pager {
-      display: block; }
-    .flat-blue .pagination {
-      display: none; }
+  @media (min-width: 1200px) {
+    .books-container .books {
+      height: 211px; }
   }
 
 </style>

@@ -2,29 +2,12 @@
 @section('content')
 
 <style media="screen">
-  .container .row {
-    padding-left: 0; }
-  .container .author {
-    color: #088; font-size: 15px; }
-  .text-danger {
-    padding-left: 50px; }
 
-  @media (max-width: 768px) {
-    .text-danger {
-      padding-left: 0; }
-  }
-  @media (max-width: 340px) {
-    .container .author {
-      font-size: 13px; }
-    .container .pirce {
-      font-size: 17px; }
-  }
 </style>
 
 
-
 @if(count($book_data))
-  <div class="container books">
+  <div class="container books-container">
 
       @foreach($book_data as $key => $value)
         @if($key % 2 == 0)
