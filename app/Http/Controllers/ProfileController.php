@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use App\book_data;
+use App\favorites_list;
 use DB;
 
 class ProfileController extends Controller
@@ -63,13 +64,8 @@ class ProfileController extends Controller
     {
       $title = '我的刊登';
       $active = 'myFavorites';
-      $find_favorites = User::find($id);
-      $explode = explode(', ', $find_favorites->favorites);
-      $book_data = Book_data::where(function($query) use ($explode) {
-        foreach ($explode as $value) {
-          $query->orWhere('id', $value);
-        }
-      })->paginate(6);
+
+      $book_data = Favorites_list::where('user_id', $id)->with('book_data')->paginate(6);
 
       if (\Auth::user()->id == $id) {
         return view('myFavorites', compact('title', 'active', 'book_data'));

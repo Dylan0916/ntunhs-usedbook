@@ -16,4 +16,9 @@ class book_data extends Model
     {
       return $this->belongsTo('App\User');
     }
+
+    public function favorites_list()
+    {
+      return $this->hasMany('App\favorites_list');
+    }
 }

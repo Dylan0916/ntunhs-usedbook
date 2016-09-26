@@ -257,9 +257,7 @@
 </div>
 
 <!-- 固定右下角 -->
-<div class="bookInformation-fixed">
-
-</div>
+<div class="bookInformation-fixed"></div>
 
 <!-- Modal (浮窗) -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

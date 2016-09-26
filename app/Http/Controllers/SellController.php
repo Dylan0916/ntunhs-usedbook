@@ -9,6 +9,7 @@ use Image;
 use App\User;
 use App\book_data;
 use App\message_board;
+use App\favorites_list;
 use Validator;
 
 class SellController extends Controller
@@ -187,11 +188,9 @@ class SellController extends Controller
     // show favorites btn
     public function show_favoritesBtn(Request $request)
     {
-      $user_favorites = User::find($request["user_id"]);
-      $favorites = $user_favorites->favorites;
+      $favorites = Favorites_list::where('user_id', $request['user_id'])->where('book_data_id', $request["book_data_id"])->first();
 
-      $strstr = strstr($favorites, $request['book_data_id']);
-      if ($strstr) {
+      if (!is_null($favorites)) {
         return 'Y';
       }
       return 'N';
@@ -200,26 +199,13 @@ class SellController extends Controller
     // add or remove favorites
     public function add_favorites(Request $request)
     {
-      $user_favorites = User::find($request["user_id"]);
-      $favorites = $user_favorites->favorites;
-
-      $strstr = strstr($favorites, $request['book_data_id']);
-      $request['favorites'] = '';
-      if ($strstr) {
-        $explode = explode(', ', $favorites);
-          for ($i = 0; $i < count($explode); $i++) {
-          if (count($explode) == 1) break;
-          if ($explode[$i] == $request['book_data_id']) continue;
-          $request['favorites'] .= ( empty($request['favorites']) ) ? $explode[$i] : ', ' . $explode[$i];
-        }
-
-        $user_favorites->update($request->all());
-        return 'remove';
+      $i = Favorites_list::where('user_id', $request['user_id'])->where('book_data_id', $request["book_data_id"]);
+      if (is_null($i->first())) {
+        Favorites_list::create($request->all());
+        return 'add';
       }
-
-      $request['favorites'] = ( empty($favorites) ) ? $request['book_data_id'] : $favorites . ', ' . $request['book_data_id'];
-      $user_favorites->update($request->all());
-      return 'add';
+      $i->delete();
+      return 'remove';
     }
 
     // 顯示書籍留言

@@ -34,19 +34,19 @@
         @endif
             <div class="col-sm-12 col-lg-6 books">
               <div class="col-sm-4">
-                <a href="{{ action('SellController@show', ['id' => $value->id]) }}">
-                  {!! Html::image('upload/' . $value->book_img, $value->book_name, ['class' => 'img-responsive', 'width' => 160]) !!}
+                <a href="{{ action('SellController@show', ['id' => $value['book_data']->id]) }}">
+                  {!! Html::image('upload/' . $value['book_data']->book_img, $value['book_data']->book_name, ['class' => 'img-responsive', 'width' => 160]) !!}
                 </a>
               </div>
               <div class="col-sm-8">
                 <h4 class="books-name">
-                  <a href="{{ action('SellController@show', ['id' => $value->id]) }}">{{ $value->book_name }}</a>
+                  <a href="{{ action('SellController@show', ['id' => $value['book_data']->id]) }}">{{ $value['book_data']->book_name }}</a>
                 </h4>
                 <div class="author">
-                  {{ $value->book_author }} <span style="color: #000;">著</span>
+                  {{ $value['book_data']->book_author }} <span style="color: #000;">著</span>
                 </div>
                 <div class="pirce" style="padding-top: 15px;">
-                  售價 <span style="color: #da0;">${{ $value->book_price2 }}</span>
+                  售價 <span style="color: #da0;">${{ $value['book_data']->book_price2 }}</span>
                 </div>
               </div>
             </div>
