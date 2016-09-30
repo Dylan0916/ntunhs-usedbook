@@ -58,7 +58,7 @@
   padding-left: 0;
   margin: 0 -15px;
 }
-.books-container .books img { width: 152px; }
+.books-container .books img { width: 145px; }
 .books-container .author {
   color: #088; font-size: 15px; }
 .books-container .text-danger { padding-left: 50px; }
@@ -92,6 +92,8 @@
 }
 .books-information .books { padding-left: 5%; }
 .books-information .leader { padding-right: 13%; }
+.books-information .otherNoBr { display: block-inline; }
+.books-information .otherBr { display: none; }
 .books-information .favorites {
   display: none;
   background: rgba(255, 119, 68, .75);
@@ -141,6 +143,8 @@
   .books-information .books h3:first-child { padding-left: 0; }
   .books-information .books .table { margin-left: 0; }
   .books-information .leader { padding-right: 17%; }
+  .books-information .otherNoBr { display: none; }
+  .books-information .otherBr { display: table-row; }
   .books-information .message .message-board .nextMessage { padding-left: 0; }
 }
 @media (max-width: 570px) {

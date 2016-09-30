@@ -19,7 +19,7 @@
 ?>
 
 <style media="screen">
-  
+
 </style>
 
 <div class="container bookInformation-container">
@@ -93,10 +93,18 @@
           </td>
         </tr>
         @if($book_data->book_other)
-          <tr>
+          <tr class="otherNoBr">
             <td>備註</td>
             <td>
-              {{ $book_data->book_other }}
+              {!! nl2br($book_data->book_other) !!}
+            </td>
+          </tr>
+          <tr class="otherBr">
+            <td colspan="2">備註：</td>
+          </tr>
+          <tr class="otherBr">
+            <td colspan="2">
+              {!! nl2br($book_data->book_other) !!}
             </td>
           </tr>
         @endif
