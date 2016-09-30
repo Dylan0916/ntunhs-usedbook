@@ -163,7 +163,7 @@ class SellController extends Controller
         // 改變大小後儲存
         $destination = $this->upload_dir;
         $img_realPath = Image::make($image->getRealPath());
-        $img_realPath->resize(160, 180, function($constraint) {
+        $img_realPath->resize(152, 207, function($constraint) {
           $constraint->aspectRatio();
         })->save($destination . '/' . $rename);
         /* 儲存原大小

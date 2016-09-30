@@ -18,169 +18,12 @@
 <!-- CSS App -->
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/themes/flat-blue.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/customer.css') }}">
 
 <!-- JQuery -->
 <script type="text/javascript" src="{{ asset('assets/dist/lib/js/jquery.min.js') }}"></script>
 
 <style media="screen">
-  * {
-    font-family: Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif; }
-  .row .btn-info:hover {
-    background-color: #0088A8;
-    border-color: #0088A8;
-  }
-  .row .btn-danger:hover {
-    background-color: #e11;
-    border-color: #e11;
-  }
-  .row .btn-warning:hover {
-    background-color: #eb1;
-    border-color: #eb1;
-  }
-
-  .sidebar-form {
-    border-radius: 3px;
-    border: 1px solid #374850;
-    margin: 10px 10px;
-  }
-  .sidebar-form input[type="text"],
-  .sidebar-form .btn {
-    margin: 0;
-    box-shadow: none;
-    background-color: #374850;
-    border: 1px solid transparent;
-    height: 35px;
-  }
-  .sidebar-form input[type="text"] {
-    color: #666;
-    border-top-left-radius: 2px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 2px;
-  }
-  .sidebar-form input[type="text"]:focus,
-  .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
-    background-color: #fff;
-    color: #666;
-  }
-  .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
-    border-left-color: #fff; }
-  .sidebar-form .btn {
-    color: #999;
-    border-top-left-radius: 0;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 0;
-  }
-
-  /* index myBooks myFavorites */
-  .books-container .row {
-    padding-left: 0;
-    margin: 0 -15px;
-  }
-  .books-container .author {
-    color: #088; font-size: 15px; }
-  .text-danger {
-    padding-left: 50px; }
-
-  /* Form */
-  .my-container {
-    padding-left: 18%;
-    padding-right: 25%
-  }
-  .my-container label {
-    font-weight: normal;
-    font-size: 18px;
-  }
-  .my-container .btn-primary,
-  .my-container .profile .btn-success {
-    border-radius: 10px;
-    width: 80px;
-    display: block;
-    margin: auto;
-  }
-  .my-container .row-active {
-    font-size: 13px;
-    padding-bottom: 50px;
-  }
-  .my-container .row-active a {
-    color: #38c; }
-  .my-container .row-active a:hover {
-    color: #208; }
-
-  /* Errors */
-  .list-group li {
-    font-size: 16px; }
-
-  /* paginate */
-  .flat-blue .pager {
-    display: none; }
-  .flat-blue .pagination {
-    display: inline-block; }
-
-  /* books */
-  .books {
-    background-color: #fff;
-    border: 1px solid #ddd; }
-  .books img {
-    display: block;
-    margin: auto;
-    border: 1.5px solid #f5f5f5;
-    transition: border-color 500ms, padding 300ms;
-    -webkit-transition: border-color 500ms, padding 300ms;
-  }
-  .books img:hover {
-    border-color: #19B5FE;
-    padding: 5px;
-  }
-  .books h4.books-name {
-    font-size: 1.05em;
-    padding-bottom: 15px;
-  }
-
-  @media (max-width: 340px) {
-    .books-container .author {
-      font-size: 13px; }
-    .books-container .pirce {
-      font-size: 17px; }
-  }
-  @media (max-width: 768px) {
-    /* myBooks myFavorites */
-    .text-danger {
-      padding-left: 0; }
-
-    /* Form */
-    .my-container {
-      padding-left: 5%;
-      padding-right: 5%
-    }
-
-    /* paginate */
-    .flat-blue .pager {
-      display: block; }
-    .flat-blue .pagination {
-      display: none; }
-  }
-  @media (max-width: 750px) {
-    .books h4.books-name {
-      padding-top: 13px; }
-  }
-  @media (max-width: 570px) {
-    .books h4.books-name {
-      font-weight: bold;
-      line-height: 24px;
-      font-size: 17px;
-    }
-  }
-  @media (max-width: 340px) {
-    .books h4.books-name {
-      font-size: 15px; }
-  }
-
-  @media (min-width: 1200px) {
-    .books-container .books {
-      height: 211px; }
-  }
 
 </style>
 
@@ -311,6 +154,12 @@
                         </a>
                     </li>
                   @endif
+                  <li class="" id="feedback">
+                      <a href="{{ action('FeedbackController@index') }}">
+                          <span class="icon fa fa-envelope"></span>
+                          <span class="title">意見回饋</span>
+                      </a>
+                  </li>
                     <!-- Dropdown-->
                 </ul>
             </div>
@@ -373,10 +222,9 @@ $(function() {
 
   // 隨解析度調整
   var resizeHandler = function() {
-    var width = $(window).width(),
-        widthSize = (width <= 414) ? width - 116 : '305';
+    var width = $(window).width();
 
-    $('.navbar .dropdown.profile .dropdown-menu').css('width', widthSize);
+    $('.navbar .dropdown.profile .dropdown-menu').css('width', (width <= 414) ? width - 116 : '305');
   };
   $(window).resize(resizeHandler);
   resizeHandler();

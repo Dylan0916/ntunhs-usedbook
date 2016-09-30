@@ -15,6 +15,9 @@ Route::get('/', 'SellController@index');
 Route::get('show/{id}', 'SellController@show');
 // show message board
 Route::post('show_messageBoard', 'SellController@show_messageBoard');
+// feedback
+Route::get('feedback', 'FeedbackController@index');
+Route::post('feedback', 'FeedbackController@sendMail');
 
 Route::group(['middleware' => 'auth'], function() {
   Route::resource('sell', 'SellController', ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
