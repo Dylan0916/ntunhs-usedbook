@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 
+use App\Notifications\RegisterMail;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Mail;
@@ -37,14 +38,20 @@ class MailController extends Controller
         'code' => md5(time()),
         'email' => $request['email'] . '@ntunhs.edu.tw'
       ];
+      $request['code'] = $data['code'];
 
       Confirmation_code::create($data);
 
+      $user = User::all()->first();
+      $user->notify(new RegisterMail($request));
+
+      /*
       Mail::send('emails.post', $data, function($message) use ($request) {
         $email = $request["email"] . '@ntunhs.edu.tw';
         $message->to($email)
                 ->subject('Welcome! 北護二手書交易平台');
       });
+      */
 
       return redirect('register/sendMail')
               ->with('sendMessage', '已發送驗證信，請到北護信箱確認吧 !');

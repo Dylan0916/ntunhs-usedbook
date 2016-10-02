@@ -211,7 +211,7 @@
         'user_id': user_id
       },
       success: function(response) {
-        $('.bookInformation-fixed').css('display', 'block');
+        $('.bookInformation-fixed').stop().fadeIn(1);
         if (response == 'remove') {
           $('.books-information .favorites').html('<i class="fa fa-heart-o"></i> 加入收藏');
           $('.bookInformation-fixed').html('已成功移除收藏 !');

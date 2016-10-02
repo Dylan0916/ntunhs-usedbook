@@ -86,6 +86,8 @@ $style = [
                                         <h1 style="{{ $style['header-1'] }}">
                                             @if ($level == 'error')
                                                 Whoops!
+                                            @elseif($level == 'customer')
+                                                <h3>感謝您註冊 <span style="color: red;">北護二手書平台</span></h3>
                                             @else
                                                 Hello!
                                             @endif
@@ -94,7 +96,7 @@ $style = [
                                         <!-- Intro -->
                                         @foreach ($introLines as $line)
                                             <p style="{{ $style['paragraph'] }}">
-                                                {{ $line }}
+                                                {!! $line !!}
                                             </p>
                                         @endforeach
 
@@ -136,7 +138,7 @@ $style = [
 
                                         <!-- Salutation -->
                                         <p style="{{ $style['paragraph'] }}">
-                                            Regards,<br>{{ config('app.name') }}
+                                            祝 平安,<br>{{ config('app.name') }}
                                         </p>
 
                                         <!-- Sub Copy -->
@@ -145,8 +147,8 @@ $style = [
                                                 <tr>
                                                     <td style="{{ $fontFamily }}">
                                                         <p style="{{ $style['paragraph-sub'] }}">
-                                                            If you’re having trouble clicking the "{{ $actionText }}" button,
-                                                            copy and paste the URL below into your web browser:
+                                                            如果您無法點擊 "{{ $actionText }}" 按鈕,
+                                                            可以複製以下文字貼到您的網址上:
                                                         </p>
 
                                                         <p style="{{ $style['paragraph-sub'] }}">

@@ -26,7 +26,7 @@
   </div>
 
   <div class="row row-active">
-    <a href="#" style="float: left;">忘記密碼？</a>
+    <a href="password/senMail" style="float: left;">忘記密碼？</a>
     <span style="float: right;">
       還不是北護二手書會員？
       <a href="register/sendMail">免費註冊</a>

@@ -45,3 +45,9 @@ Route::post('register/sendMail', 'Auth\MailController@sendMail');
 Route::get('register/{code}', 'Auth\RegisterController@showRegistrationForm');
 Route::post('register/{code}', 'Auth\RegisterController@register');
 Route::get('logout', 'Auth\LoginController@logout');
+
+// Forget password
+Route::get('password/senMail', 'Auth\ForgotPasswordController@showLinkRequestForm');
+Route::post('password/senMail', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::get('password/reset/{token?}', 'Auth\ResetPasswordController@showResetForm');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');

@@ -62,7 +62,7 @@ class ProfileController extends Controller
 
     public function showMyFavorites($id)
     {
-      $title = '我的刊登';
+      $title = '我的收藏';
       $active = 'myFavorites';
 
       $book_data = Favorites_list::where('user_id', $id)->with('book_data')->paginate(6);
