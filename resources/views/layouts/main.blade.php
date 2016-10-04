@@ -61,10 +61,12 @@
 
                     <li class="dropdown profile">
                         <?php $loginText = (Auth::check()) ? Auth::user()->name : 'Login';
-                              $loginIcon = (Auth::check()) ? 'fa-user' : 'fa-sign-in';
+                              $loginIcon = (Auth::check()) ?
+                              '<img src="' . asset('assets/img/profile/' . Auth::user()->img) . '" class="img-responsive profile-img-sm profile-img-main" alt="' . Auth::user()->name . '" width="40">' :
+                              '<i class="fa fa-sign-in"></i>';
                               $loginLink = (Auth::check()) ? 'href="#" data-toggle="dropdown" aria-expanded="false"' : 'href="' . url('login') . '"';  ?>
                         <a role="button" class="dropdown-toggle" {!! $loginLink !!}>
-                          <i class="fa {{ $loginIcon }}"></i>&nbsp; {{ $loginText }}
+                          {!! $loginIcon !!}&nbsp; {{ $loginText }}
                           <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu animated fadeInDown">
