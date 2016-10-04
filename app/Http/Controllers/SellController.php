@@ -73,7 +73,7 @@ class SellController extends Controller
 
     public function store(Request $request)
     {
-      $rules = array_merge(['book_img' => 'required|image|mimes:jpeg, jpg, png, bmp, gif, svg|max:2048'], $this->rules);
+      $rules = array_merge(['book_img' => 'required|image|mimes:jpeg,jpg,png,bmp,gif,svg|max:2048'], $this->rules);
       $attribute = array_merge(['book_img' => '書籍封面'], $this->attribute);
 
       $validator = Validator::make($request->all(), $rules);
@@ -112,8 +112,8 @@ class SellController extends Controller
 
     public function update(Request $request, $id)
     {
-      $rules = $this->rules;
-      $attribute = $this->attribute;
+      $rules = ($request["book_img"]) ? array_merge(['book_img' => 'required|image|mimes:jpeg,jpg,png,bmp,gif,svg|max:2048'], $this->rules) : $this->rules;
+      $attribute = ($request["book_img"]) ? array_merge(['book_img' => '書籍封面'], $this->attribute) : $this->attribute;
 
       $validator = Validator::make($request->all(), $rules);
       $validator->setAttributeNames($attribute);
@@ -233,12 +233,24 @@ class SellController extends Controller
                 $create_date = explode(' ', $value->created_at);
 
                 $bookdata = Book_data::find($request["book_data_id"]);
+                // 是否賣家
                 $isSeller = ($value->user_id == $bookdata->user_id) ? '<span class="isSeller">賣家</span> ' : '';
               ?>
                 <div class="<?= $nextMessage; ?>">
-                  <h4><?= $isSeller . $userData->name ?></h4>
-                  <p><?= $value->content; ?></p>
-                  <p style="font-size: 14px; color: #777;">in <?= $create_date[0]; ?></p>
+                  <table>
+                    <tr>
+                      <td valign="top" style="padding-right: 12px;">
+                        <div class="profile-img-sm">
+                          <img class="img-responsive" src="<?= asset('assets/img/profile/' . $userData->img) ?>" alt="<?= $userData->name ?>" width="60">
+                        <div>
+                      </td>
+                      <td>
+                        <h4><?= $isSeller . $userData->name ?></h4>
+                        <p><?= $value->content; ?></p>
+                        <p style="font-size: 14px; color: #777;">in <?= $create_date[0]; ?></p>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               <?php
               }

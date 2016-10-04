@@ -12,6 +12,20 @@
   background-color: #eb1;
   border-color: #eb1;
 }
+.profile-img-sm,
+.my-container .profile-img-sm,
+.bookInformation-container .profile-img-sm {
+    overflow: hidden;
+    background: #fff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    -webkit-transition: border-color 500ms;
+            transition: border-color 500ms;
+}
+.profile-img-main {
+  display: inline-block;
+  width: 40px; height: 40px;
+}
 
 /************************************/
 /*          sidebar search          */
@@ -231,12 +245,14 @@
   display: block;
   margin: auto;
 }
+/* 註冊 & 忘記密碼 */
 .my-container .row-active {
   font-size: 13px;
   padding-bottom: 50px;
 }
 .my-container .row-active a { color: #38c; }
 .my-container .row-active a:hover { color: #208; }
+.my-container .profile-img:hover { border-color: #19B5FE; }
 
 @media (max-width: 768px) {
   .my-container {

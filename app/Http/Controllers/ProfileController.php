@@ -9,9 +9,17 @@ use App\User;
 use App\book_data;
 use App\favorites_list;
 use DB;
+use Validator;
+use Image;
 
 class ProfileController extends Controller
 {
+    private $upload_dir;
+
+    public function __construct()
+    {
+      $this->upload_dir = base_path() . '/public/assets\img\profile';
+    }
 
     public function show($id)
     {
@@ -40,9 +48,41 @@ class ProfileController extends Controller
 
     public function store(Request $request, $id)
     {
-      $this->validate($request, ['name' => 'required'], ['name.required' => 'Name 不能為空。']);
+      $post = $request->all();
+      $profile = User::find($id);
+      $rules = ['name' => 'required', 'img' => 'image|mimes:jpeg,jpg,png,bmp,gif,svg|max: 2048'];
+      $validator = Validator::make($post, $rules)->setAttributeNames(['name' => 'Name', 'img' => '圖片']);
 
-      $profile = User::find($id)->update($request->all());
+      if ($validator->fails()) {
+        return redirect('profile/' . $id)
+                ->withInput()
+                ->withErrors($validator);
+      }
+
+      // 儲存使用者圖片
+      if ($request->hasFile('img')) {
+        // get file name
+        $image = $request->file('img');
+        $realName = $image->getClientOriginalName();
+        // getClientOriginalExtension() 獲得照片副檔名
+        $rename = md5($realName) . time() . '.' . $image->getClientOriginalExtension();
+
+        // move file to server
+        // 改變大小後儲存
+        $destination = $this->upload_dir;
+        $img_realPath = Image::make($image->getRealPath());
+        $img_realPath->resize(152, 207, function($constraint) {
+          $constraint->aspectRatio();
+        })->save($destination . '/' . $rename);
+
+        // 刪除原圖片
+        $file_path = $this->upload_dir . '/' . $profile->img;
+        if ( ($profile->img != 'default.png') && file_exists($file_path)) unlink($file_path);
+
+        $post['img'] = $rename;
+      }
+
+      $profile->update($post);
 
       return redirect('profile/' . $id)->with('message', 'Update Success !');
     }

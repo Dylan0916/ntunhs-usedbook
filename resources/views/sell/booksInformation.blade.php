@@ -19,7 +19,10 @@
 ?>
 
 <style media="screen">
-
+  .profile-img-sm {
+    display: inline-block;
+    width: 60px; height: 60px;
+  }
 </style>
 
 <div class="container bookInformation-container">

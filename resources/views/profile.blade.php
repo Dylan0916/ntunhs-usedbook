@@ -16,35 +16,43 @@
 ?>
 
 <style media="screen">
-   .my-container img {
-    display: block;
-    margin: auto;
-    border: 1.5px solid #f5f5f5;
-    transition: border-color 500ms, padding 300ms;
-    -webkit-transition: border-color 500ms, padding 300ms;
-  }
-   .my-container img:hover {
-    border-color: #A42D00;
-    padding: 5px;
-  }
+  .container .row { padding-left: 0; }
 
-  .container .row {
-    padding-left: 0; }
-  .container .author {
-    color: #088; font-size: 15px; }
+  .my-container .profile-img-sm {
+    display: block; margin: auto;
+    width: 170px; height: 170px;
+  }
+  .profile-change-img {
+      padding: 4px 10px;
+      position: relative;
+      background: #a9CEFA;
+      margin-top: 20px;
+      font-size: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: inline-block;
+      text-decoration: none;
+  }
+  .profile-change-img input {
+      position: absolute;
+      font-size: 30px;
+      right: 0;
+      top: 0;
+      opacity: 0;
+      filter: alpha(opacity=0);
+      cursor: pointer
+  }
+  .profile-change-img:hover { background: #98CFFF; }
+
 
   @media (max-width: 500px) {
-    h2.text-center {
+    h2.profile-email {
       font-weight: bold;
       font-size: 17px;
     }
-    .profile table {
-      font-size: 17px; }
+    .profile table { font-size: 17px; }
   }
-  @media (max-width: 340px) {
-    .container .author {
-      font-size: 13px; }
-  }
+
 </style>
 
 <div class="container my-container">
@@ -53,18 +61,22 @@
     @include('errors.list')
   </div>
 
-  <div class="row">
-    {!! Html::image('assets/img/profile/hello.png', 'Hello', ['class' => 'img-responsive', 'width' => 350]) !!}
+  <div class="row profile-img-sm">
+    {!! Html::image('assets/img/profile/' . $profile->img, $profile->name, ['class' => 'img-responsive', 'width' => 170]) !!}
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-        <h2 class="profile-email text-center">
-          {{ $profile->email }}
-        </h2>
-    </div>
-    {!! Form::model($profile, ['action' => ['ProfileController@store', 'id' => $profile->id]]) !!}
-      <div class="col-md-12 profile">
+    {!! Form::model($profile, ['action' => ['ProfileController@store', 'id' => $profile->id], 'files' => 'true']) !!}
+      <div class="col-md-12 text-center">
+          <a href="#" class="profile-change-img">
+              <input type="file" name="img" id="change-img"><i class="fa fa-refresh"></i> <span id="file-name">更改圖片</span>
+          </a>
+          <h2 class="profile-email">
+            {{ $profile->email }}
+          </h2>
+      </div>
+
+      <div class="col-md-12 profile" style="margin-top: 10px;">
         <table class="table table-hover">
           <tr>
             <td>Name</td>
@@ -88,7 +100,7 @@
   </div>
 </div>
 
-<div class="container books" style="padding-top: 30px; margin-top: 30px;">
+<div class="container books-container" style="margin-top: 30px;">
 
   <h3>為您推薦的書籍</h3>
     @foreach($book_data as $key => $value)
@@ -121,5 +133,13 @@
     <hr />
 
 </div>
+
+<script type="text/javascript">
+  $('#change-img').change(function() {
+    var split = $(this).val().split('\\'),
+        file_name = split[(split.length) - 1];
+    $('#file-name').html(file_name);
+  });
+</script>
 
 @endsection
